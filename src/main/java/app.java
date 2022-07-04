@@ -10,9 +10,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class app {
-    public static void main(String[] args) throws JSONException, IOException {
-        String arq = "baseDados";
+    public static void main(String[] args) throws JSONException {
 
+        String arq = "baseDados";
         try (BufferedReader br = new BufferedReader(new FileReader(arq))) {
             String linha = br.readLine();
             while (linha != null) {
@@ -29,6 +29,8 @@ public class app {
         } catch (IOException e) {
             System.out.println("Arquivo não encontrado!" + e.getMessage());
         }
+
+
     }
 
 }

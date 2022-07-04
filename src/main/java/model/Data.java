@@ -21,17 +21,18 @@ public class Data {
     public Data() {
         this.data = new Date();
         this.unix = unixPorPeriodo(this.data);
+        this.previsao = previsao;
     }
 
 
-    public Data(Temperatura previsao) {
-        this.data = new Date();
+    public Data(Date data,Temperatura previsao) {
+        this.data = data;
         this.unix = unixPorPeriodo(this.data);
         this.previsao = previsao;
     }
 
-    public Date getData() {
-        return data;
+    public Date getData() throws ParseException {
+        return sdf.parse(sdf.format(data));
     }
 
     public String getUnix() {
@@ -57,6 +58,7 @@ public class Data {
     public Date periodo() throws ParseException {
         calendar.add(Calendar.DAY_OF_WEEK, 1);
         data = sdf.parse(sdf.format(calendar.getTime()));
+        System.out.println(data);
         return data;
     }
 

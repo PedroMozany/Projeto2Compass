@@ -11,12 +11,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,31 +29,32 @@ public class VerificarPrevisão extends HttpServlet {
 
         List<Data> listData = new LinkedList<>();
         Data data = new Data();
-        Cidades cidade;
+        Cidades cidade = null;
         Temperatura previsao;
+
 
         try (Connection connection = new ConnectionFactory().initConexao()) {
             CidadeDAO cidadeDAO = new CidadeDAO(connection);
             cidade = cidadeDAO.buscar(nome);
-            previsao = new PrevisaoTempo().previsao(cidade.getLatitude(), cidade.getLongitude(), data.getUnix());
-            data.setPrevisao(previsao);
-            listData.add(data);
+            String unix = data.unixPorPeriodo(data.getData());
+            previsao = new PrevisaoTempo().previsao(cidade.getLatitude(), cidade.getLongitude(), unix);
+            listData.add(new Data(data.getData(), unix, previsao));
 
-            for (int i = 0; i < 5; i++) {
+
+            for (int i = 0; i <= 4; i++) {
                 Date date = data.periodo();
-                String unix = data.unixPorPeriodo(date);
+                unix = data.unixPorPeriodo(date);
                 previsao = new PrevisaoTempo().previsao(cidade.getLatitude(), cidade.getLongitude(), unix);
                 listData.add(new Data(date, unix, previsao));
             }
 
         } catch (SQLException e) {
-            request.getRequestDispatcher("WEB-INF/views/TelaErro.jsp").forward(request, response);
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
-            request.getRequestDispatcher("WEB-INF/views/TelaErro.jsp").forward(request, response);
             throw new RuntimeException(e);
-        } catch (ParseException e) {
+        } catch (NullPointerException e) {
             request.getRequestDispatcher("WEB-INF/views/TelaErro.jsp").forward(request, response);
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 

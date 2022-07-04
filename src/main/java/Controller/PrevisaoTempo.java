@@ -28,7 +28,6 @@ public class PrevisaoTempo {
             String min = objs.get("temp_min").getAsString();
             String max = objs.get("temp_max").getAsString();
             Temperatura temperatura = new Temperatura(temp, min, max);
-            System.out.println(temperatura);
             return temperatura;
 
     }
