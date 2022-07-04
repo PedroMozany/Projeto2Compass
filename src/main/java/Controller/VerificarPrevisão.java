@@ -49,10 +49,13 @@ public class VerificarPrevisão extends HttpServlet {
             }
 
         } catch (SQLException e) {
+            request.getRequestDispatcher("WEB-INF/views/TelaErro.jsp").forward(request, response);
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
+            request.getRequestDispatcher("WEB-INF/views/TelaErro.jsp").forward(request, response);
             throw new RuntimeException(e);
         } catch (ParseException e) {
+            request.getRequestDispatcher("WEB-INF/views/TelaErro.jsp").forward(request, response);
             throw new RuntimeException(e);
         }
 
